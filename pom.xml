@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.flask</groupId>
-	<artifactId>rabbitqm-cdi-tester</artifactId>
+	<artifactId>hello-rabbitqm-cdi</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Hello RabbitMQ-CDI</name>
@@ -38,7 +38,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>rabbitqm-cdi-tester</finalName>
+		<finalName>hello-rabbitmq-cdi</finalName>
 	</build>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
