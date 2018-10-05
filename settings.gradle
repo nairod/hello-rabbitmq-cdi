@@ -1,0 +1,25 @@
+rootProject.name = 'hello-rabbitmq-cdi'
+
+/*
+includeBuild('../rabbitmq-cdi') {
+    dependencySubstitution {
+        substitute module('net.reini:rabbitmq-cdi') with project(':')
+    }
+}
+*/
+
+def myDeps = ['rabbitmq-cdi', 'my-dependency-2']
+for (String projectName : myDeps) {
+  if (new File(rootDir, '../' + projectName).exists()) {
+    def path = '../' + projectName
+    def mod  = 'net.reini:' + projectName
+    System.out.println("Adding composite build for project: " + projectName + " using path: " + path + " replacing module: " + mod);
+    includeBuild(path) {
+      dependencySubstitution {
+        substitute module(mod) with project(':')
+      }
+    }
+   } else {
+     System.out.println("Skipping composite build for project: " + projectName);
+   }
+}

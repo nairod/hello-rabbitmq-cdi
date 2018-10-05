@@ -1,0 +1,67 @@
+plugins {
+    id "java"
+    id "eclipse"
+    id "war"
+}
+
+group = 'ch.flask'
+version = '0.0.1-SNAPSHOT'
+
+description = """Hello RabbitMQ-CDI"""
+
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+repositories {
+     jcenter()
+}
+
+dependencies {
+    implementation 'net.reini:rabbitmq-cdi:0.9.7-SNAPSHOT'
+//    compile group: 'net.reini', name:'rabbitmq-cdi', version: '0.9.7-SNAPSHOT'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version:'5.3.1'
+    providedCompile group: 'javax', name: 'javaee-api', version:'7.0' 	
+    
+    System.out.println(rootDir.getParent()+"/rabbitmq-cdi")
+    
+}
+
+task deploy(dependsOn: war, type: Copy) {
+
+     println "configure task deploy"
+     from('build/libs/') {
+          include '*.war'
+     }
+     
+     def target="${project.name}.war"
+     def ok=new File("/home/dorian/dev/wildfly-13.0.0.Final/standalone/deployments/${target}.deployed")
+     def nok=new File("/home/dorian/dev/wildfly-13.0.0.Final/standalone/deployments/${target}.failed")   
+     doFirst { 
+          println "deploy doFirst"
+          if(ok.exists()) { ok.delete() } 
+          if(nok.exists()) { nok.delete() }
+     }
+
+     into "/home/dorian/dev/wildfly-13.0.0.Final"+"/standalone/deployments/"
+     rename '.*',target
+ 
+     doLast {
+          println "executing wildfly deploy..."
+          file(ok).text=""
+          def deployed=false
+ 
+          for(def i=0;i<80;i++) {
+               if(ok.exists()) { deployed=true; break } 
+               if(nok.exists()) { break }
+               sleep(500);
+          }
+ 
+          if(deployed) { println("deploy ok.") }
+          else { throw new RuntimeException("Deployment failed, see Wildfly logs!") }
+     }
+ 
+}
